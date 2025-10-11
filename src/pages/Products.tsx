@@ -54,11 +54,12 @@ export default function Products() {
         </div>
       </section>
 
-      {/* Products Grid */}
+      {/* Products Grid */
+      /* Show 1 product on mobile, 3 on desktop */}
       <section className="py-12">
         <div className="container mx-auto px-4">
           {products && products.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {products.map((product) => (
                 <ProductCard key={product.id} product={product} onUpdate={refetch} />
               ))}

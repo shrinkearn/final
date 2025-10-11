@@ -47,25 +47,75 @@ export default function AdminProducts() {
   const handleImageUpload = async (file: File) => {
     setUploading(true);
     try {
+      // File validation
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+      
+      if (file.size > maxSize) {
+        throw new Error('File size must be less than 5MB');
+      }
+      
+      if (!allowedTypes.includes(file.type)) {
+        throw new Error('Only JPEG, PNG, WebP, and GIF images are allowed');
+      }
+
+      // Check if user is authenticated and has admin privileges
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error('You must be logged in to upload images');
+      }
+
+      // Check admin role
+      const { data: roleData } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user.id)
+        .eq('role', 'admin')
+        .single();
+
+      if (!roleData) {
+        throw new Error('Admin privileges required to upload images');
+      }
+
       const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
-      const filePath = `${fileName}`;
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const filePath = `products/${fileName}`;
+
+      console.log('Uploading file:', { fileName, filePath, fileSize: file.size, fileType: file.type });
 
       const { error: uploadError } = await supabase.storage
         .from('product-images')
-        .upload(filePath, file);
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error('Supabase upload error:', uploadError);
+        
+        if (uploadError.message.includes('bucket not found')) {
+          throw new Error('Storage bucket not found. Please contact administrator to set up the product-images bucket.');
+        } else if (uploadError.message.includes('permission denied')) {
+          throw new Error('Permission denied. Please ensure you have admin privileges.');
+        } else if (uploadError.message.includes('file size')) {
+          throw new Error('File too large. Please choose a smaller image.');
+        } else {
+          throw new Error(`Upload failed: ${uploadError.message}`);
+        }
+      }
 
       const { data: { publicUrl } } = supabase.storage
         .from('product-images')
         .getPublicUrl(filePath);
 
-      setFormData({ ...formData, image_url: publicUrl });
+      console.log('Upload successful, public URL:', publicUrl);
+
+      setFormData(prev => ({ ...prev, image_url: publicUrl }));
       toast.success('Image uploaded successfully');
-    } catch (error) {
-      console.error('Upload error:', error);
-      toast.error('Failed to upload image');
+    } catch (error: any) {
+      console.error('Upload error details:', error);
+      const errorMessage = error.message || 'Failed to upload image';
+      toast.error(errorMessage);
     } finally {
       setUploading(false);
     }
@@ -291,11 +341,21 @@ export default function AdminProducts() {
                     }}
                     onClick={() => fileInputRef.current?.click()}
                   >
-                    <Upload className="w-12 h-12 mx-auto mb-2 text-muted-foreground" />
-                    <p className="text-sm text-muted-foreground mb-2">Upload Product Image</p>
+                    {uploading ? (
+                      <div className="flex flex-col items-center">
+                        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-2"></div>
+                        <p className="text-sm text-primary">Uploading...</p>
+                      </div>
+                    ) : (
+                      <>
+                        <Upload className="w-12 h-12 mx-auto mb-2 text-muted-foreground" />
+                        <p className="text-sm text-muted-foreground mb-2">Upload Product Image</p>
+                        <p className="text-xs text-muted-foreground mb-2">Max 5MB • JPEG, PNG, WebP, GIF</p>
+                      </>
+                    )}
                     <Input 
                       type="file" 
-                      accept="image/*"
+                      accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
                       onChange={(e) => {
                         const file = e.target.files?.[0];
                         if (file) {
@@ -307,10 +367,18 @@ export default function AdminProducts() {
                       disabled={uploading}
                       ref={fileInputRef}
                     />
-                    {uploading && <p className="text-sm text-muted-foreground mt-2">Uploading...</p>}
+                    {imageFile && !uploading && (
+                      <div className="mt-2 p-2 bg-muted rounded text-xs">
+                        <p className="font-medium">Selected: {imageFile.name}</p>
+                        <p className="text-muted-foreground">
+                          {(imageFile.size / 1024 / 1024).toFixed(2)} MB
+                        </p>
+                      </div>
+                    )}
                     {formData.image_url && (
                       <div className="mt-4">
-                        <img src={formData.image_url} alt="Preview" className="w-full h-32 object-cover rounded" />
+                        <p className="text-sm text-green-600 mb-2">✓ Image uploaded successfully</p>
+                        <img src={formData.image_url} alt="Preview" className="w-full h-32 object-cover rounded border" />
                       </div>
                     )}
                   </div>

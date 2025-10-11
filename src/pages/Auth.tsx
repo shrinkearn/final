@@ -25,6 +25,7 @@ export default function Auth() {
   const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
   const isAdminLogin = searchParams.get('admin') === 'true';
+  const defaultTab = searchParams.get('tab') === 'signup' && !isAdminLogin ? 'signup' : 'signin';
 
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -98,7 +99,7 @@ export default function Auth() {
         }
 
         toast.success('Admin login successful!');
-        navigate('/admin/dashboard');
+        navigate('/');
       } else {
         toast.success('Signed in successfully!');
         navigate('/');
@@ -129,7 +130,7 @@ export default function Auth() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="signin">
+          <Tabs defaultValue={defaultTab}>
             {!isAdminLogin && (
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="signin">Sign In</TabsTrigger>

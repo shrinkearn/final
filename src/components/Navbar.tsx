@@ -1,5 +1,5 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { ShoppingCart, Heart, User, LogOut, LayoutDashboard, Shield, House, Package, Info, Phone } from 'lucide-react';
+import { ShoppingCart, Heart, User, LogOut, LayoutDashboard, Shield, House, Package, Info, Phone, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
@@ -35,9 +35,7 @@ export default function Navbar() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-              <span className="text-2xl font-bold text-primary-foreground">O</span>
-            </div>
+            <img src="/oil-drop.svg" alt="OilMart" className="w-10 h-10" />
             <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
               OilMart
             </span>
@@ -90,6 +88,17 @@ export default function Navbar() {
                 <Phone className="h-4 w-4" />
                 Contact Us
               </Button>
+              <Button
+                variant="ghost"
+                onClick={() => navigate('/policy')}
+                className={cn(
+                  "gap-2",
+                  location.pathname === '/policy' && "bg-accent"
+                )}
+              >
+                <FileText className="h-4 w-4" />
+                Policy
+              </Button>
             </div>
           )}
 
@@ -138,6 +147,10 @@ export default function Navbar() {
                       <Phone className="mr-2 h-4 w-4" />
                       Contact Us
                     </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/policy')}>
+                      <FileText className="mr-2 h-4 w-4" />
+                      Policy
+                    </DropdownMenuItem>
                     {isAdmin && (
                       <DropdownMenuItem onClick={() => navigate('/admin')}>
                         <LayoutDashboard className="mr-2 h-4 w-4" />
@@ -160,9 +173,8 @@ export default function Navbar() {
                 <Button variant="outline" onClick={() => navigate('/auth')}>
                   Login
                 </Button>
-                <Button variant="default" onClick={() => navigate('/auth?admin=true')} className="hidden md:flex">
-                  <Shield className="mr-2 h-4 w-4" />
-                  Admin Login
+                <Button variant="default" onClick={() => navigate('/auth?tab=signup')} className="hidden md:flex">
+                  Sign Up
                 </Button>
               </div>
             )}
