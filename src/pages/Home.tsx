@@ -67,7 +67,7 @@ export default function Home() {
           playsInline
           className="absolute inset-0 w-full h-full object-cover"
         >
-          <source src="/oil-video.mp4" type="video/mp4" />
+          <source src="/pages/oil-video.mp4" type="video/mp4" />
         </video>
         
         {/* Overlay for better text readability */}
