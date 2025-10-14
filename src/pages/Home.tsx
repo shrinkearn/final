@@ -62,10 +62,10 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto text-center">
             <h1 className="text-6xl md:text-8xl font-bold mb-8 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Welcome to OilMart
+              Sri Aarumugan Oil Mills
             </h1>
             <p className="text-2xl md:text-3xl text-muted-foreground mb-10">
-              Your trusted source for premium quality cooking oils. Pure, healthy, and authentic.
+              Premium manufacturer of cold-pressed gingelly oil, sesame seeds, and cotton seed cake. Tradition, purity, and quality since 2022.
             </p>
             <Link to="/products">
               <Button size="lg" className="text-xl px-10 py-7">

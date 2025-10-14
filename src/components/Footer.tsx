@@ -9,11 +9,11 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <img src="/oil-drop.svg" alt="Logo" className="h-6 w-6" />
-              <span className="text-xl font-semibold">OilMart</span>
+              <img src="/oil-drop.svg" alt="Sri Aarumugan Oil Mills" className="h-6 w-6" />
+              <span className="text-xl font-semibold">Sri Aarumugan Oil Mills</span>
             </div>
             <p className="text-muted-foreground">
-              Bringing purity and taste to your kitchen. Carefully sourced and delivered with care.
+              Premium manufacturer of cold-pressed sesame oil and quality seeds since 2022. Tradition meets purity.
             </p>
             <div className="flex items-center gap-3 mt-4">
               <a href="#" aria-label="Facebook" className="h-9 w-9 rounded-full bg-background border flex items-center justify-center hover:bg-muted transition-colors">
@@ -54,16 +54,16 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
             <ul className="space-y-3 text-muted-foreground">
-              <li className="flex items-start gap-3"><MapPin className="h-4 w-4 mt-1" /><span>123 Market Street, Food District, Chennai</span></li>
-              <li className="flex items-center gap-3"><Phone className="h-4 w-4" /><span>+91 90000 00000</span></li>
-              <li className="flex items-center gap-3"><Mail className="h-4 w-4" /><span>support@oilmart.in</span></li>
+              <li className="flex items-start gap-3"><MapPin className="h-4 w-4 mt-1" /><span>158Z-2/4, Vijayapuri Road, East Pandavarmangalam, Kovilpatti, Thoothukudi - 628501, Tamil Nadu, India</span></li>
+              <li className="flex items-center gap-3"><Phone className="h-4 w-4" /><span>Contact us for inquiries</span></li>
+              <li className="flex items-center gap-3"><Mail className="h-4 w-4" /><span>info@sriaarumuganoilmills.com</span></li>
             </ul>
           </div>
         </div>
       </div>
       <div className="border-t">
         <div className="container mx-auto px-4 py-6 text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} OilMart. All rights reserved.
+          © {new Date().getFullYear()} Sri Aarumugan Oil Mills. All rights reserved. GST: 33AEMFS3450E1Z5
         </div>
       </div>
     </footer>
