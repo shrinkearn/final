@@ -1,11 +1,9 @@
 import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
-import { ShoppingBag, Shield, Truck, Award, Star } from 'lucide-react';
+import { ShoppingBag } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import ProductCard from '@/components/ProductCard';
-import { Card, CardContent } from '@/components/ui/card';
 import Footer from '@/components/Footer';
 
 export default function Home() {
@@ -56,7 +54,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      
+
       {/* Hero Section */}
       <section className="relative py-32 md:py-40 min-h-[70vh] flex items-center overflow-hidden">
         {/* Video Background */}
@@ -69,10 +67,10 @@ export default function Home() {
         >
           <source src="/pages/oil-video.mp4" type="video/mp4" />
         </video>
-        
-        {/* Overlay for better text readability */}
+
+        {/* Overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/60 to-black/70"></div>
-        
+
         {/* Content */}
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-6xl mx-auto text-center">
@@ -91,5 +89,8 @@ export default function Home() {
           </div>
         </div>
       </section>
-      </div>
-      
+
+      <Footer />
+    </div>
+  );
+}
