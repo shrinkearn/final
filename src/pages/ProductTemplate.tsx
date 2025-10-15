@@ -3,12 +3,41 @@ import { Button } from '@/components/ui/button';
 import { Star, ShoppingCart } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 
+const litreOptions = [
+  {
+    id: 1,
+    volume: 1,
+    price: 24.99,
+    originalPrice: 29.99,
+    image: 'Small bottle (1L)',
+    thumbnails: ['View 1', 'View 2', 'View 3', 'View 4']
+  },
+  {
+    id: 2,
+    volume: 2,
+    price: 44.99,
+    originalPrice: 54.99,
+    image: 'Medium bottle (2L)',
+    thumbnails: ['View 1', 'View 2', 'View 3', 'View 4']
+  },
+  {
+    id: 3,
+    volume: 3,
+    price: 59.99,
+    originalPrice: 74.99,
+    image: 'Large bottle (3L)',
+    thumbnails: ['View 1', 'View 2', 'View 3', 'View 4']
+  },
+];
+
 export default function ProductTemplate() {
-  const [selectedVariant, setSelectedVariant] = useState(1);
+  const [selectedLitre, setSelectedLitre] = useState(litreOptions[0]);
   const [selectedImage, setSelectedImage] = useState(0);
 
-  const thumbnails = [0, 1, 2, 3];
-  const variants = [1, 2, 3];
+  const handleLitreChange = (option: typeof litreOptions[0]) => {
+    setSelectedLitre(option);
+    setSelectedImage(0);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -21,19 +50,20 @@ export default function ProductTemplate() {
               <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-50">
                 <div className="text-center space-y-3">
                   <div className="w-32 h-32 mx-auto bg-gray-200 rounded-lg animate-pulse"></div>
-                  <p className="text-sm text-gray-400 font-medium">Main Product Image</p>
+                  <p className="text-sm text-gray-400 font-medium">{selectedLitre.image}</p>
+                  <p className="text-xs text-gray-500">{selectedLitre.volume}L Volume</p>
                 </div>
               </div>
             </Card>
 
             {/* Thumbnail Gallery */}
             <div className="grid grid-cols-4 gap-3">
-              {thumbnails.map((thumb) => (
+              {selectedLitre.thumbnails.map((thumb, index) => (
                 <button
-                  key={thumb}
-                  onClick={() => setSelectedImage(thumb)}
+                  key={index}
+                  onClick={() => setSelectedImage(index)}
                   className={`aspect-square rounded-lg overflow-hidden transition-all ${
-                    selectedImage === thumb
+                    selectedImage === index
                       ? 'ring-2 ring-gray-800 ring-offset-2'
                       : 'ring-1 ring-gray-200 hover:ring-gray-300'
                   }`}
@@ -74,9 +104,12 @@ export default function ProductTemplate() {
 
               {/* Price Display */}
               <div className="flex items-baseline gap-3">
-                <span className="text-4xl font-bold text-gray-900">$XX.XX</span>
-                <span className="text-lg text-gray-400 line-through">$YY.YY</span>
+                <span className="text-4xl font-bold text-gray-900">${selectedLitre.price.toFixed(2)}</span>
+                <span className="text-lg text-gray-400 line-through">${selectedLitre.originalPrice.toFixed(2)}</span>
               </div>
+              <p className="text-sm text-gray-500 mt-2">
+                Price per litre: ${(selectedLitre.price / selectedLitre.volume).toFixed(2)}/L
+              </p>
             </div>
 
             {/* Divider */}
@@ -94,26 +127,29 @@ export default function ProductTemplate() {
             {/* Divider */}
             <div className="border-t border-gray-200"></div>
 
-            {/* Product Options/Variants Section */}
+            {/* Litre Selection Section */}
             <div className="space-y-3">
               <label className="block text-sm font-semibold text-gray-900">
-                Select Option:
+                Select Volume (Litres):
               </label>
               <div className="flex gap-3">
-                {variants.map((variant) => (
+                {litreOptions.map((option) => (
                   <button
-                    key={variant}
-                    onClick={() => setSelectedVariant(variant)}
+                    key={option.id}
+                    onClick={() => handleLitreChange(option)}
                     className={`px-6 py-3 rounded-lg border-2 font-medium transition-all ${
-                      selectedVariant === variant
+                      selectedLitre.id === option.id
                         ? 'border-gray-900 bg-gray-900 text-white'
                         : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
                     }`}
                   >
-                    Option {variant}
+                    {option.volume} L
                   </button>
                 ))}
               </div>
+              <p className="text-sm text-gray-500">
+                Selected: {selectedLitre.volume} Litre{selectedLitre.volume > 1 ? 's' : ''}
+              </p>
             </div>
 
             {/* Divider */}
@@ -136,6 +172,13 @@ export default function ProductTemplate() {
               >
                 Buy Now
               </Button>
+
+              <div className="text-2xl font-bold mt-4">
+                Total: ${selectedLitre.price.toFixed(2)}
+              </div>
+              <p className="text-sm text-gray-500">
+                You save: ${(selectedLitre.originalPrice - selectedLitre.price).toFixed(2)} ({Math.round(((selectedLitre.originalPrice - selectedLitre.price) / selectedLitre.originalPrice) * 100)}% off)
+              </p>
             </div>
 
             {/* Additional Info */}
@@ -163,30 +206,30 @@ export default function ProductTemplate() {
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-3">
                 <div className="flex justify-between py-2 border-b border-gray-100">
-                  <span className="text-gray-600">Specification 1:</span>
-                  <span className="font-medium text-gray-900">Value</span>
+                  <span className="text-gray-600">Volume:</span>
+                  <span className="font-medium text-gray-900">{selectedLitre.volume} Litre{selectedLitre.volume > 1 ? 's' : ''}</span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-gray-100">
-                  <span className="text-gray-600">Specification 2:</span>
-                  <span className="font-medium text-gray-900">Value</span>
+                  <span className="text-gray-600">Price per Litre:</span>
+                  <span className="font-medium text-gray-900">${(selectedLitre.price / selectedLitre.volume).toFixed(2)}/L</span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-gray-100">
-                  <span className="text-gray-600">Specification 3:</span>
-                  <span className="font-medium text-gray-900">Value</span>
+                  <span className="text-gray-600">Total Price:</span>
+                  <span className="font-medium text-gray-900">${selectedLitre.price.toFixed(2)}</span>
                 </div>
               </div>
               <div className="space-y-3">
                 <div className="flex justify-between py-2 border-b border-gray-100">
-                  <span className="text-gray-600">Specification 4:</span>
-                  <span className="font-medium text-gray-900">Value</span>
+                  <span className="text-gray-600">Discount:</span>
+                  <span className="font-medium text-gray-900">{Math.round(((selectedLitre.originalPrice - selectedLitre.price) / selectedLitre.originalPrice) * 100)}% off</span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-gray-100">
-                  <span className="text-gray-600">Specification 5:</span>
-                  <span className="font-medium text-gray-900">Value</span>
+                  <span className="text-gray-600">You Save:</span>
+                  <span className="font-medium text-gray-900">${(selectedLitre.originalPrice - selectedLitre.price).toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-gray-100">
-                  <span className="text-gray-600">Specification 6:</span>
-                  <span className="font-medium text-gray-900">Value</span>
+                  <span className="text-gray-600">Package Type:</span>
+                  <span className="font-medium text-gray-900">{selectedLitre.image}</span>
                 </div>
               </div>
             </div>
